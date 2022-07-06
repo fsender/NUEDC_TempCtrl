@@ -1,2 +1,6 @@
-# NUEDC_TempCtrl
-ESP32-C3 Temperature Controller
+# 电赛温度控制
+****
+## 呵呵
+我用的是ESP32-C3芯片
+这还是我第一次用呐
+开发板: 合宙LuatOS-ESP32-C3 **标准** 版 ( **阉割** 版实在难受)
