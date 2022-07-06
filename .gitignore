@@ -3,4 +3,5 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-lib/
+lib/TFT_eSPI
+lib/U8g2_for_TFT_eSPI
