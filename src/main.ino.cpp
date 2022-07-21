@@ -71,6 +71,7 @@ int rpm_set = 1000; // 转速RPM(设定值)
 
 int waveType = 0; //正弦波
 int wavePeriod = 10000; //周期, 单位是毫秒
+int waveAmplitude = 2048; //振幅
 
 int baseHeat_set = 0;   //加热功率设定值
 int baseMotor_set = 0;  //点击功率设定值
@@ -269,26 +270,26 @@ void loop(){
     valSet = wavePeriod/1000;
     if(waveType == 1) { //正弦
       double v = sin(double(millis()%wavePeriod)*TWO_PI/wavePeriod);
-      setFanMotorSpeed(v*2048);
+      setFanMotorSpeed(v*waveAmplitude);
     }
     else if(waveType == 2) { //方波
-      if(millis()%wavePeriod > wavePeriod/2) setFanMotorSpeed(-2048);
-      else setFanMotorSpeed(2048);
+      if(millis()%wavePeriod > wavePeriod/2) setFanMotorSpeed(-waveAmplitude);
+      else setFanMotorSpeed(waveAmplitude);
     }
     else if(waveType == 3) { //三角
       if(millis()%wavePeriod > wavePeriod/2) {
         int d = millis()%wavePeriod - wavePeriod/2;
         int dmax = wavePeriod/2;
-        setFanMotorSpeed(2048-d*4096/dmax);
+        setFanMotorSpeed(waveAmplitude-d*waveAmplitude*2/dmax);
       }
       else {
         int d = millis()%wavePeriod;
         int dmax = wavePeriod/2;
-        setFanMotorSpeed(d*4096/dmax-2048);
+        setFanMotorSpeed(d*waveAmplitude*2/dmax-waveAmplitude);
       }
     }
     else if(waveType == 4) { //锯齿
-      setFanMotorSpeed((millis()%wavePeriod)*4096/wavePeriod-2048);
+      setFanMotorSpeed((millis()%wavePeriod)*waveAmplitude*2/wavePeriod-waveAmplitude);
     }
   }
   else if(runMode == 4) {
@@ -386,9 +387,13 @@ void loop(){
         };
         waveType = menuSelect();
         if(waveType){
-          char s[40] = "输入周期, 单位: 秒";
+          char s[40] = "输入";
           strcat(s,waveTypeStr[waveType-1]);
+          strcat(s,"周期, 单位: 秒");
           wavePeriod = getNum(valSet,s)*1000;
+          waveAmplitude = getNum(waveAmplitude,"设置波形幅度");
+          if(waveAmplitude<300) waveAmplitude = 300;
+          if(waveAmplitude>4096) waveAmplitude = 4096;
         }
         else setFanMotorSpeed(2147483647);
         if(wavePeriod > 300000 || wavePeriod < 1999){

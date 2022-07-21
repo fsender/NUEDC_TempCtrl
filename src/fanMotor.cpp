@@ -30,11 +30,13 @@ void setFanMotorSpeed(int s_peed){
     return;
   }
   if(s_peed < 0){
+    if(s_peed < -4095) s_peed = -4095;
     if(4095+s_peed > 4095-345) ledcWrite(0,4095-345);      //电机打开
     else ledcWrite(0,4095+s_peed);      //电机打开
     digitalWrite(13,HIGH);
   }
   else{
+    if(s_peed > 4095) s_peed = 4095;
     if(s_peed < 345) ledcWrite(0,345);      //电机打开
     else ledcWrite(0,s_peed);      //电机打开
     digitalWrite(13,LOW);
